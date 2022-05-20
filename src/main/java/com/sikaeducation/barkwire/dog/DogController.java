@@ -1,13 +1,16 @@
 package com.sikaeducation.barkwire.dog;
 
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 import com.sikaeducation.barkwire.dog.Dog;
 import com.sikaeducation.barkwire.dog.DogService;
 
+import com.sikaeducation.barkwire.exception.ResourceNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +19,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("api/dogs")
 public class DogController {
@@ -26,42 +32,46 @@ public class DogController {
   private DogService dogService;
 
   @GetMapping
-  public ResponseEntity<List<Dog>> index(){
+  public Map<String, List<Dog>> index(){
     List<Dog> dogs = dogService.all();
-    return new ResponseEntity<List<Dog>>(dogs, HttpStatus.OK);
+    Map response = new HashMap<String, List<Dog>>();
+    response.put("dogs", dogs);
+    return response;
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Dog> show(@PathVariable Long id){
-    Optional<Dog> foundDog = dogService.one(id);
-
-    if (foundDog.isPresent()) {
-      return new ResponseEntity<Dog>(foundDog.get(), HttpStatus.OK);
-    } else {
-      return ResponseEntity.notFound().build();
-    }
+  public Map<String, Dog> show(@PathVariable Long id) throws ResourceNotFoundException {
+    Dog dog = dogService
+      .find(id)
+      .orElseThrow(() -> new ResourceNotFoundException("No dog with that ID"));
+    Map response = new HashMap<String, Dog>();
+    response.put("dog", dog);
+    return response;
   }
 
   @PostMapping
-  public ResponseEntity<Dog> create(@Validated @RequestBody Dog dog) {
+  @ResponseStatus(HttpStatus.CREATED)
+  public Map<String, Dog> create(@Validated @RequestBody Dog dog) {
     Dog createdDog = dogService.create(dog);
-    return new ResponseEntity<Dog>(createdDog, HttpStatus.CREATED);
+    Map response = new HashMap<String, Dog>();
+    response.put("dog", createdDog);
+    return response;
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Dog> update(@RequestBody Dog dog, @PathVariable Long id) {
-    Optional<Dog> updatedDog = dogService.update(dog, dog.getId());
-
-    if (updatedDog.isPresent()) {
-      return new ResponseEntity<Dog>(updatedDog.get(), HttpStatus.OK);
-    } else {
-      return ResponseEntity.notFound().build();
-    }
+  @ResponseStatus(HttpStatus.CREATED)
+  public Map<String, Dog> update(@RequestBody Dog dog, @PathVariable Long id) throws ResourceNotFoundException {
+    Dog updatedDog = dogService
+      .update(dog, dog.getId())
+      .orElseThrow(() -> new ResourceNotFoundException("No dog with that ID"));
+    Map response = new HashMap<String, Dog>();
+    response.put("dog", updatedDog);
+    return response;
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Dog> destroy(@PathVariable Long id) {
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void destroy(@PathVariable Long id) {
     dogService.delete(id);
-    return new ResponseEntity<Dog>(HttpStatus.NO_CONTENT);
   }
 }

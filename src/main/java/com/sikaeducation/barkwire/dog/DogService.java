@@ -18,7 +18,7 @@ public class DogService {
     return (List<Dog>) dogRepository.findAll();
   }
 
-  public Optional<Dog> one(Long id){
+  public Optional<Dog> find(Long id){
     return dogRepository.findById(id);
   }
 
