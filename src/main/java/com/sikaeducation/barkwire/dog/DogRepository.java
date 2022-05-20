@@ -1,6 +1,6 @@
-package com.sikaeducation.barkwire.repositories;
+package com.sikaeducation.barkwire.dog;
 
-import com.sikaeducation.barkwire.models.Dog;
+import com.sikaeducation.barkwire.dog.Dog;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

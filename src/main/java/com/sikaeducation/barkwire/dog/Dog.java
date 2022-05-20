@@ -1,4 +1,4 @@
-package com.sikaeducation.barkwire.models;
+package com.sikaeducation.barkwire.dog;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

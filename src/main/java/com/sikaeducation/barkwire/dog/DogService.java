@@ -1,10 +1,10 @@
-package com.sikaeducation.barkwire.services;
+package com.sikaeducation.barkwire.dog;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.sikaeducation.barkwire.models.Dog;
-import com.sikaeducation.barkwire.repositories.DogRepository;
+import com.sikaeducation.barkwire.dog.Dog;
+import com.sikaeducation.barkwire.dog.DogRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

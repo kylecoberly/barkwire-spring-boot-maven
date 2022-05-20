@@ -1,10 +1,10 @@
-package com.sikaeducation.barkwire.controllers;
+package com.sikaeducation.barkwire.dog;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.sikaeducation.barkwire.models.Dog;
-import com.sikaeducation.barkwire.services.DogService;
+import com.sikaeducation.barkwire.dog.Dog;
+import com.sikaeducation.barkwire.dog.DogService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
