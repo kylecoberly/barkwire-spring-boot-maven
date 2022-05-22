@@ -22,15 +22,15 @@ public class DogService {
     return dogRepository.save(dog);
   }
 
-  public Optional<Dog> update(Dog dog, Long id) {
+  public Optional<Dog> update(Dog dog) {
     Optional<Dog> foundDog = dogRepository.findById(dog.getId());
 
     if (foundDog.isPresent()) {
-        Dog dogToUpdate = foundDog.get();
-        dogToUpdate.setName(dog.getName());
-        dogToUpdate.setBreed(dog.getBreed());
+        Dog updatedDog = foundDog.get();
+        updatedDog.setName(dog.getName());
+        updatedDog.setBreed(dog.getBreed());
 
-        Dog updatedDog = dogRepository.save(dog);
+        dogRepository.save(updatedDog);
         return Optional.of(updatedDog);
       } else {
         return Optional.empty();

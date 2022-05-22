@@ -35,7 +35,7 @@ public class DogController {
 
   @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public Map<String, Dog> read(@PathVariable Long id) throws ResourceNotFoundException {
+  public Map<String, Dog> read(@PathVariable Long id) {
     Dog dog = dogService
       .findById(id)
       .orElseThrow(() -> new ResourceNotFoundException("No dog with that ID"));
@@ -51,10 +51,11 @@ public class DogController {
 
   @PutMapping("/{id}")
   @ResponseStatus(HttpStatus.CREATED)
-  public Map<String, Dog> update(@RequestBody Dog dog, @PathVariable Long id) throws ResourceNotFoundException {
+  public Map<String, Dog> update(@RequestBody Dog dog, @PathVariable Long id) {
     Dog updatedDog = dogService
-      .update(dog, dog.getId())
+      .update(dog)
       .orElseThrow(() -> new ResourceNotFoundException("No dog with that ID"));
+
     return createHashSingular(updatedDog);
   }
 
