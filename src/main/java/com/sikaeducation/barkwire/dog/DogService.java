@@ -1,10 +1,6 @@
 package com.sikaeducation.barkwire.dog;
 
-import java.util.List;
 import java.util.Optional;
-
-import com.sikaeducation.barkwire.dog.Dog;
-import com.sikaeducation.barkwire.dog.DogRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,11 +10,11 @@ public class DogService {
   @Autowired
   private DogRepository dogRepository;
 
-  public List<Dog> all(){
-    return (List<Dog>) dogRepository.findAll();
+  public Iterable<Dog> list(){
+    return dogRepository.findAll();
   }
 
-  public Optional<Dog> find(Long id){
+  public Optional<Dog> findById(Long id){
     return dogRepository.findById(id);
   }
 
@@ -41,7 +37,7 @@ public class DogService {
       }
   }
 
-  public void delete(Long id) {
+  public void deleteById(Long id) {
     dogRepository.deleteById(id);
   }
 }

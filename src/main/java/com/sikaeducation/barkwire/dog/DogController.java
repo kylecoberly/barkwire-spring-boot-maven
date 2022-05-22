@@ -2,11 +2,6 @@ package com.sikaeducation.barkwire.dog;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-
-import com.sikaeducation.barkwire.dog.Dog;
-import com.sikaeducation.barkwire.dog.DogService;
 
 import com.sikaeducation.barkwire.exception.ResourceNotFoundException;
 
@@ -32,30 +27,26 @@ public class DogController {
   private DogService dogService;
 
   @GetMapping
-  public Map<String, List<Dog>> index(){
-    List<Dog> dogs = dogService.all();
-    Map response = new HashMap<String, List<Dog>>();
-    response.put("dogs", dogs);
-    return response;
+  @ResponseStatus(HttpStatus.OK)
+  public Map<String, Iterable<Dog>> list(){
+    Iterable<Dog> dogs = dogService.list();
+    return createHashPlural(dogs);
   }
 
   @GetMapping("/{id}")
-  public Map<String, Dog> show(@PathVariable Long id) throws ResourceNotFoundException {
+  @ResponseStatus(HttpStatus.OK)
+  public Map<String, Dog> read(@PathVariable Long id) throws ResourceNotFoundException {
     Dog dog = dogService
-      .find(id)
+      .findById(id)
       .orElseThrow(() -> new ResourceNotFoundException("No dog with that ID"));
-    Map response = new HashMap<String, Dog>();
-    response.put("dog", dog);
-    return response;
+    return createHashSingular(dog);
   }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public Map<String, Dog> create(@Validated @RequestBody Dog dog) {
     Dog createdDog = dogService.create(dog);
-    Map response = new HashMap<String, Dog>();
-    response.put("dog", createdDog);
-    return response;
+    return createHashSingular(createdDog);
   }
 
   @PutMapping("/{id}")
@@ -64,14 +55,26 @@ public class DogController {
     Dog updatedDog = dogService
       .update(dog, dog.getId())
       .orElseThrow(() -> new ResourceNotFoundException("No dog with that ID"));
-    Map response = new HashMap<String, Dog>();
-    response.put("dog", updatedDog);
-    return response;
+    return createHashSingular(updatedDog);
   }
 
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void destroy(@PathVariable Long id) {
-    dogService.delete(id);
+  public void delete(@PathVariable Long id) {
+    dogService.deleteById(id);
+  }
+
+  private Map<String, Dog> createHashSingular(Dog dog){
+    Map<String, Dog> response = new HashMap<String, Dog>();
+    response.put("dog", dog);
+
+    return response;
+  }
+
+  private Map<String, Iterable<Dog>> createHashPlural(Iterable<Dog> dogs){
+    Map<String, Iterable<Dog>> response = new HashMap<String, Iterable<Dog>>();
+    response.put("dogs", dogs);
+
+    return response;
   }
 }
